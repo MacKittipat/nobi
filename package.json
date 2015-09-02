@@ -1,0 +1,7 @@
+{
+    "name": "nobi",
+    "version": "1.0.0",
+    "devDependencies": {
+        "slack-client": "1.4.1"
+    }
+}
