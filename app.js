@@ -1,6 +1,7 @@
+var fs = require('fs');
 var Slack = require('slack-client');
 
-var token = '';
+var token = fs.readFileSync('./token', 'utf8').trim();
 var autoReconnect = true;
 var autoMark = true;
 var slack = new Slack(token, autoReconnect, autoMark);
