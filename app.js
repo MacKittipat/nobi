@@ -11,9 +11,15 @@ slack.on('open', function() {
 });
 
 slack.on('message', function(message) {
-  console.log(message);
   var user = slack.getUserByID(message.user);
-  console.log(user.name + " : " + message.text);
+  var channel = slack.getChannelGroupOrDMByID(message.channel);
+  if(user && message && channel) {
+    console.log("[" + channel.name + "] " + user.name + " : " + message.text);
+  }
+});
+
+slack.on('error', function(error) {
+  console.error(error);
 });
 
 slack.login();
