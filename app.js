@@ -1,5 +1,6 @@
 var fs = require('fs');
 var Slack = require('slack-client');
+var express = require('express');
 
 var token = fs.readFileSync('./token', 'utf8').trim();
 var autoReconnect = true;
@@ -43,3 +44,14 @@ slack.on('error', function(error) {
 });
 
 slack.login();
+
+var app = express();
+var rest = require('./rest')(slackUsers, slackChannels);
+
+app.use('/nobi/slack', rest);
+
+var server = app.listen(3000, function () {
+  var host = server.address().address;
+  var port = server.address().port;
+  console.log('Example app listening at http://%s:%s', host, port);
+});
