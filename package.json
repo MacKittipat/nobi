@@ -3,6 +3,6 @@
     "version": "1.0.0",
     "devDependencies": {
         "slack-client": "1.4.1",
-        "restify": "4.0.0"
+        "express": "4.13.3"
     }
 }
