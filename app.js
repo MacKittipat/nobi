@@ -11,6 +11,7 @@ var slackChannels = [];
 var slackUsers = [];
 
 slack.on('open', function() {
+  console.log('Slack on open');
 
   var channelsStoragePath = './storage/channels.txt';
   var usersStoragePath = './storage/users.txt';
@@ -52,6 +53,9 @@ slack.on('open', function() {
         console.log('Saved users to storage');
     });
   }
+
+  // console.log("%j", slackChannels);
+  // console.log("%j", slackUsers);
 });
 
 slack.on('message', function(message) {
@@ -67,6 +71,7 @@ slack.on('error', function(error) {
 });
 
 slack.login();
+console.log('Logged into Slack');
 
 var app = express();
 var rest = require('./rest')(slack, slackUsers, slackChannels);
@@ -76,5 +81,5 @@ app.use('/nobi/slack', rest);
 var server = app.listen(3000, function () {
   var host = server.address().address;
   var port = server.address().port;
-  console.log('Example app listening at http://%s:%s', host, port);
+  console.log('App listening at http://%s:%s', host, port);
 });
