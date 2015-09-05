@@ -11,24 +11,42 @@ var slackChannels = [];
 var slackUsers = [];
 
 slack.on('open', function() {
-  // Find channels that nobi is member
-  for(var slackChannelId in slack.channels) {
-    var slackChannel = slack.channels[slackChannelId];
-    if(slackChannel.is_member) {
-      var channel = {};
-      channel[slackChannel.id] = slackChannel.name;
-      slackChannels.push(channel);
-      // Find users from all channel that nobi is member
-      for(var slackUserId in slackChannel._client.users) {
-        var slackUser = slackChannel._client.users[slackUserId];
-        var user = {};
-        user[slackUser.id] = slackUser.name;
-        slackUsers.push(user);
+
+  // Fetch channels and users from Slack and store in storage folder
+  var channelsStoragePath = './storage/channels.txt';
+  var usersStoragePath = './storage/users.txt';
+
+  if(!fs.existsSync(channelsStoragePath) || !fs.existsSync(usersStoragePath)) {
+
+    // Find channels that nobi is member
+    for(var slackChannelId in slack.channels) {
+      var slackChannel = slack.channels[slackChannelId];
+      if(slackChannel.is_member) {
+        var channel = {};
+        channel[slackChannel.id] = slackChannel.name;
+        slackChannels.push(channel);
+        // Find users from all channel that nobi is member
+        for(var slackUserId in slackChannel._client.users) {
+          var slackUser = slackChannel._client.users[slackUserId];
+          var user = {};
+          user[slackUser.id] = slackUser.name;
+          slackUsers.push(user);
+        }
       }
     }
+
+    // Store channels and users in file
+    fs.writeFile(channelsStoragePath, JSON.stringify(slackChannels),
+      function (err) {
+        if (err) throw err;
+        console.log('Saved channels to storage');
+    });
+    fs.writeFile(usersStoragePath, JSON.stringify(slackUsers),
+      function (err) {
+        if (err) throw err;
+        console.log('Saved users to storage');
+    });
   }
-  // console.log("%j", slackChannels);
-  // console.log("%j", slackUsers);
 });
 
 slack.on('message', function(message) {
@@ -46,7 +64,7 @@ slack.on('error', function(error) {
 slack.login();
 
 var app = express();
-var rest = require('./rest')(slackUsers, slackChannels);
+var rest = require('./rest')(slack, slackUsers, slackChannels);
 
 app.use('/nobi/slack', rest);
 

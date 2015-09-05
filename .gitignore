@@ -1,2 +1,4 @@
 node_modules/
 token
+storage/users.txt
+storage/channels.txt

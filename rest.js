@@ -1,6 +1,6 @@
 var express = require('express');
 
-module.exports = function(slackUsers, slackChannels) {
+module.exports = function(slack, slackUsers, slackChannels) {
   var router = express.Router();
 
   router.get('/users', function(req, res) {
