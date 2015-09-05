@@ -12,12 +12,17 @@ var slackUsers = [];
 
 slack.on('open', function() {
 
-  // Fetch channels and users from Slack and store in storage folder
   var channelsStoragePath = './storage/channels.txt';
   var usersStoragePath = './storage/users.txt';
 
-  if(!fs.existsSync(channelsStoragePath) || !fs.existsSync(usersStoragePath)) {
-
+  if(fs.existsSync(channelsStoragePath) && fs.existsSync(usersStoragePath)) {
+    // Load channels and users from storage
+    console.log('Load channels and users from storage');
+    slackChannels = JSON.parse(fs.readFileSync(channelsStoragePath));
+    slackUsers = JSON.parse(fs.readFileSync(usersStoragePath));
+  } else {
+    // Fetch channels and users from Slack and store in storage folder
+    console.log('Fetch channels and users from Slack');
     // Find channels that nobi is member
     for(var slackChannelId in slack.channels) {
       var slackChannel = slack.channels[slackChannelId];
