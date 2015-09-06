@@ -11,5 +11,11 @@ module.exports = function(slack, slackUsers, slackChannels) {
     res.send(slackChannels);
   });
 
+  router.get('/messages/send', function(req, res) {
+    var slackChannel = slack.getChannelByName(req.query.channel);
+    slackChannel.send(req.query.message);
+    res.send();
+  });
+
   return router;
 };
