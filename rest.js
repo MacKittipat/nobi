@@ -17,5 +17,18 @@ module.exports = function(slack, slackUsers, slackChannels) {
     res.send();
   });
 
+  router.get('/messages/bot/send', function (req, res) {
+    slack._apiCall('chat.postMessage',
+      {
+        'token': req.query.token,
+        'channel': req.query.channel,
+        'text': req.query.message
+      },
+      function(data) {
+        console.log(data);
+    });
+    res.send();
+  });
+
   return router;
 };
