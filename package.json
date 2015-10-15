@@ -5,6 +5,7 @@
         "slack-client": "1.4.1",
         "express": "4.13.3",
         "async": "1.4.2",
-        "mongodb": "2.0.45"
+        "mongodb": "2.0.45",
+        "config": "1.16.0"
     }
 }

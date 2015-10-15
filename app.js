@@ -4,8 +4,9 @@ var express = require('express');
 var util = require('util');
 var async = require('async');
 var MongoClient = require('mongodb').MongoClient;
+var config = require('config');
 
-var token = fs.readFileSync('./token', 'utf8').trim();
+var token = config.get('nobi.slack.token');
 var autoReconnect = true;
 var autoMark = true;
 var slack = new Slack(token, autoReconnect, autoMark);
@@ -89,7 +90,7 @@ slack.on('message', function(message) {
     console.log("[" + channel.name + "] " + user.name + " : " + message.text);
 
     // Save message to mongo
-    var mongoUrl = 'mongodb://{IP}:27017/nobi';
+    var mongoUrl = 'mongodb://' + config.get('nobi.db.url') + ':27017/nobi';
     MongoClient.connect(mongoUrl, function(err, db) {
       db.collection('slack').insertOne({
         channel: channel.name,
