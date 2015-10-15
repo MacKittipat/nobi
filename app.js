@@ -3,6 +3,7 @@ var Slack = require('slack-client');
 var express = require('express');
 var util = require('util');
 var async = require('async');
+var MongoClient = require('mongodb').MongoClient;
 
 var token = fs.readFileSync('./token', 'utf8').trim();
 var autoReconnect = true;
@@ -86,6 +87,20 @@ slack.on('message', function(message) {
   var channel = slack.getChannelGroupOrDMByID(message.channel);
   if(user && message && channel) {
     console.log("[" + channel.name + "] " + user.name + " : " + message.text);
+
+    // Save message to mongo
+    var mongoUrl = 'mongodb://{IP}:27017/nobi';
+    MongoClient.connect(mongoUrl, function(err, db) {
+      db.collection('slack').insertOne({
+        channel: channel.name,
+        user: user.name,
+        message: message.text,
+        createdtime: Date.now()
+      }, function(err, r) {
+        db.close();
+      });
+    });
+
   }
 });
 
